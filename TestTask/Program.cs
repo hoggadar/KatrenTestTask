@@ -147,18 +147,27 @@ namespace TestTask
         /// <param name="charType">Тип букв для анализа</param>
         private static void RemoveCharStatsByType(IList<LetterStats> letters, CharType charType)
         {
-            var vowels = new HashSet<char> { 'а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я' };
-            var consonants = new HashSet<char> { 'б', 'в', 'г', 'д', 'ж', 'з', 'й', 'к', 'л', 'м', 'н', 'п', 'р', 'с', 'т', 'ф', 'х', 'ц', 'ч', 'ш', 'щ' };
-
             for (int i = letters.Count - 1; i >= 0; i--)
             {
                 var letter = letters[i].Letter;
-                bool shouldRemove = false;
+                if (ShouldRemove(letter, charType)) letters.RemoveAt(i);
+            }
+        }
 
-                if (charType == CharType.Vowel && vowels.Contains(char.ToLower(letter[0]))) shouldRemove = true;
-                else if (charType == CharType.Consonants && consonants.Contains(char.ToLower(letter[0]))) shouldRemove = true;
+        private static bool ShouldRemove(string letter, CharType charType)
+        {
+            var vowels = new HashSet<char> { 'а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я' };
+            var consonants = new HashSet<char> { 'б', 'в', 'г', 'д', 'ж', 'з', 'й', 'к', 'л', 'м', 'н', 'п', 'р', 'с', 'т', 'ф', 'х', 'ц', 'ч', 'ш', 'щ' };
+            char lowerLetter = char.ToLower(letter[0]);
 
-                if (shouldRemove) letters.RemoveAt(i);
+            switch (charType)
+            {
+                case CharType.Vowel:
+                    return vowels.Contains(lowerLetter);
+                case CharType.Consonants:
+                    return consonants.Contains(lowerLetter);
+                default:
+                    return false;
             }
         }
 
